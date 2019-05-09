@@ -22,6 +22,9 @@ strategy:
       python.version: '3.7'
   maxParallel: 4
 
+pool:
+  vmImage: $(imageName)
+
 steps:
   - task: UsePythonVersion@0
     inputs:
