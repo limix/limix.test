@@ -6,26 +6,59 @@
 trigger:
 - master
 
-strategy:
-  matrix:
-    linux_py36:
-      imageName: "ubuntu-latest"
-      python.version: '3.6'
-    linux_py37:
-      imageName: "ubuntu-latest"
-      python.version: '3.7'
-    mac_py37:
-      imageName: "macos-10.13"
-      python.version: '3.7'
-    windows_py37:
-      imageName: "vs2017-win2016"
-      python.version: '3.7'
-  maxParallel: 4
+jobs:
+- job: linux
+  pool: "ubuntu-latest"
+  strategy:
+    matrix:
+      linux_py36_limix2:
+        python.version: '3.6'
+        limix.version: '<3,>=2'
+      linux_py36_limix3:
+        python.version: '3.6'
+        limix.version: '>=3'
+      linux_py37_limix3:
+        python.version: '3.7'
+        limix.version: '>=3'
+  steps:
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: '$(python.version)'
+      architecture: 'x64'
+  - script: python -m pip install setuptools numpy scipy -U
+    displayName: 'Pre-installation dependencies'
+  - script: python -m pip install limix
+    displayName: 'Install limix'
+  - script: python -c "import sys; import limix; sys.exit(limix.test())"
+    displayName: 'Test limix'
 
-pool:
-  vmImage: $(imageName)
+- job: macos
+  pool: "macos-10.13"
+  strategy:
+    matrix:
+      mac_py37:
+        imageName: "macos-10.13"
+        python.version: '3.7'
+  steps:
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: '$(python.version)'
+      architecture: 'x64'
+  - script: python -m pip install setuptools numpy scipy -U
+    displayName: 'Pre-installation dependencies'
+  - script: python -m pip install limix
+    displayName: 'Install limix'
+  - script: python -c "import sys; import limix; sys.exit(limix.test())"
+    displayName: 'Test limix'
 
-steps:
+- job: windows
+  pool: "vs2017-win2016"
+  strategy:
+    matrix:
+      windows_py37:
+        imageName: "vs2017-win2016"
+        python.version: '3.7'
+  steps:
   - task: UsePythonVersion@0
     inputs:
       versionSpec: '$(python.version)'
