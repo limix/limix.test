@@ -39,8 +39,8 @@ jobs:
   strategy:
     matrix:
       mac_py37:
-        imageName: "macos-10.13"
         python.version: '3.7'
+        limix.version: '>=3'
   steps:
   - task: UsePythonVersion@0
     inputs:
@@ -59,8 +59,8 @@ jobs:
   strategy:
     matrix:
       windows_py37:
-        imageName: "vs2017-win2016"
         python.version: '3.7'
+        limix.version: '>=3'
   steps:
   - task: UsePythonVersion@0
     inputs:
