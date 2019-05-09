@@ -6,19 +6,23 @@
 trigger:
 - master
 
-jobs:
-- job: 'Test'
-  pool:
-    vmImage: 'ubuntu-latest'
-  strategy:
-    matrix:
-      Python36:
-        python.version: '3.6'
-      Python37:
-        python.version: '3.7'
-    maxParallel: 2
+strategy:
+  matrix:
+    linux_py36:
+      imageName: "ubuntu-latest"
+      python.version: '3.6'
+    linux_py37:
+      imageName: "ubuntu-latest"
+      python.version: '3.7'
+    mac_py37:
+      imageName: "macos-10.13"
+      python.version: '3.7'
+    windows_py37:
+      imageName: "vs2017-win2016"
+      python.version: '3.7'
+  maxParallel: 4
 
-  steps:
+steps:
   - task: UsePythonVersion@0
     inputs:
       versionSpec: '$(python.version)'
